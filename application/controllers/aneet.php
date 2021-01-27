@@ -3,6 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Aneet extends CI_Controller {
 
+	
+
+
     public function index()
 	{
 		if(isset($_SESSION['logged_in'])){
@@ -85,14 +88,24 @@ class Aneet extends CI_Controller {
 
 	public function stock(){
 		if(isset($_SESSION['logged_in'])){
+			$this->load->model('AdminModel');
+			$qry="SELECT lc_product.p_name,lc_category.cat_name,lc_stock.st_count,lc_stock.st_discount FROM `lc_stock`,`lc_product` ,`lc_category` WHERE lc_stock.st_product=lc_product.p_id AND lc_product.p_category=lc_category.cat_id";
+			$tblhead=array('Sl No','Product','Category','Stock','Discount');
+			$table=$this->AdminModel->QuerytoHtmlTable($qry,$tblhead);
+		
+			//print_r($table);
+		
+			$data['table']=$table;
 			$this->load->view('admin/adm_header');
-			$this->load->view('admin/adm_stock');
+			$this->load->view('admin/adm_stock',$data);
 			$this->load->view('admin/adm_footer');
+			
 
 		}
 		else{
 			header('location:aneet/login');
 		}
+
 	}
 	public function categories(){
 		if(isset($_SESSION['logged_in'])){
